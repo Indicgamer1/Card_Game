@@ -7,21 +7,21 @@ public class AudioPlayer : MonoBehaviour
     [SerializeField]
     private AudioSource audioSource;
     [SerializeField]
-    private AudioClip[] audio;
+    private new AudioClip[] audio;
 
-    private static float vol = 1;
+    public static float Vol { get; } = 1;
 
     void Awake()
     {
         Instance = this;
     }
-    public void PlayAudio(int id)
+    public void PlayAudio(int _id)
     {
-        audioSource.PlayOneShot(audio[id]);
+        audioSource.PlayOneShot(audio[_id]);
     }
-    public void PlayAudio(int id, float vol)
+    public void PlayAudio(int _id, float _vol)
     {
-        audioSource.PlayOneShot(audio[id], vol);
+        audioSource.PlayOneShot(audio[_id], _vol);
     }
 
 }

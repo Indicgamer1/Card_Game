@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +6,6 @@ public class Card : MonoBehaviour
 {
 
     private int spriteID;
-    private int id;
     private bool flipped;
     private bool turning;
     [SerializeField]
@@ -15,25 +13,25 @@ public class Card : MonoBehaviour
 
     // flip card animation
     // if changeSprite specified, will 90 degree, change to back/front sprite before flipping another 90 degree
-    private IEnumerator Flip90(Transform thisTransform, float time, bool changeSprite)
+    private IEnumerator Flip90(Transform _thisTransform, float _time, bool _changeSprite)
     {
-        Quaternion startRotation = thisTransform.rotation;
-        Quaternion endRotation = thisTransform.rotation * Quaternion.Euler(new Vector3(0, 90, 0));
-        float rate = 1.0f / time;
+        Quaternion startRotation = _thisTransform.rotation;
+        Quaternion endRotation = _thisTransform.rotation * Quaternion.Euler(new Vector3(0, 90, 0));
+        float rate = 1.0f / _time;
         float t = 0.0f;
         while (t < 1.0f)
         {
             t += Time.deltaTime * rate;
-            thisTransform.rotation = Quaternion.Slerp(startRotation, endRotation, t);
+            _thisTransform.rotation = Quaternion.Slerp(startRotation, endRotation, t);
 
             yield return null;
         }
         //change sprite and flip another 90degree
-        if (changeSprite)
+        if (_changeSprite)
         {
             flipped = !flipped;
             ChangeSprite();
-            StartCoroutine(Flip90(transform, time, false));
+            StartCoroutine(Flip90(transform, _time, false));
         }
         else
             turning = false;
@@ -49,17 +47,14 @@ public class Card : MonoBehaviour
     private void ChangeSprite()
     {
         if (spriteID == -1 || img == null) return;
-        if (flipped)
-            img.sprite = GameManager.Instance.GetSprite(spriteID);
-        else
-            img.sprite = GameManager.Instance.CardBack();
+        img.sprite = flipped ? GameManager.Instance.GetSprite(spriteID) : GameManager.Instance.CardBack();
     }
     // call fade animation
     public void Inactive()
     {
         StartCoroutine(Fade());
     }
-    // play fade animation by changing alpha of img's color
+    // play fade animation by changing alpha of images color
     private IEnumerator Fade()
     {
         float rate = 1.0f / 2.5f;
@@ -87,14 +82,11 @@ public class Card : MonoBehaviour
             flipped = true;
             ChangeSprite();
         }
-        get { return spriteID; }
+        get => spriteID;
     }
     // card ID getter and setter
-    public int ID
-    {
-        set { id = value; }
-        get { return id; }
-    }
+    public int ID { set; get; }
+
     // reset card default rotation
     public void ResetRotation()
     {
@@ -113,6 +105,6 @@ public class Card : MonoBehaviour
     private IEnumerator SelectionEvent()
     {
         yield return new WaitForSeconds(0.5f);
-        GameManager.Instance.CardClicked(spriteID, id);
+        GameManager.Instance.CardClicked(spriteID, ID);
     }
 }
