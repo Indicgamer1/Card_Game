@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 224155607137634836}
   - component: {fileID: 222320365367592660}
   - component: {fileID: 114694722997618464}
-  - component: {fileID: 114251050735978520}
   - component: {fileID: 114810282200747862}
+  - component: {fileID: 2085599711835441494}
   m_Layer: 5
-  m_Name: CardPrefab
+  m_Name: CardPrefab 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,7 +78,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &114251050735978520
+--- !u!114 &114810282200747862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1450127849210320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07ead838e32e3754bb3c4833895c1ad8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  img: {fileID: 114694722997618464}
+--- !u!114 &2085599711835441494
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,7 +128,7 @@ MonoBehaviour:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
-    m_SelectedTrigger: Highlighted
+    m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 114694722997618464}
@@ -134,16 +147,3 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &114810282200747862
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1450127849210320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07ead838e32e3754bb3c4833895c1ad8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  img: {fileID: 114694722997618464}
