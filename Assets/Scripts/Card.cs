@@ -105,7 +105,7 @@ public class Card : MonoBehaviour
     public void CardBtn()
     {
         if (flipped || turning) return;
-        if (!GameManager.Instance.canClick()) return;
+        if (!GameManager.Instance.CanClick()) return;
         Flip();
         StartCoroutine(SelectionEvent());
     }
@@ -113,6 +113,6 @@ public class Card : MonoBehaviour
     private IEnumerator SelectionEvent()
     {
         yield return new WaitForSeconds(0.5f);
-        GameManager.Instance.cardClicked(spriteID, id);
+        GameManager.Instance.CardClicked(spriteID, id);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /*
 public class GameManager : MonoBehaviour
@@ -284,8 +285,8 @@ public class GameManager : MonoBehaviour
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public static int gameRows = 2;
-    public static int gameCols = 2;
+    private static int gameRows = 2;
+    private static int gameCols = 2;
     
     // gameobject instance
     [SerializeField]
@@ -305,8 +306,9 @@ public class GameManager : MonoBehaviour
     private Card[] cards;
 
     //we place card on this panel
+    [FormerlySerializedAs("panel")]
     [SerializeField]
-    private GameObject panel;
+    private GameObject cardPanel,gamePanel;
     [SerializeField]
     private GameObject info;
     // for preloading
@@ -333,7 +335,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         gameStart = false;
-        panel.SetActive(false);
+        gamePanel.SetActive(false);
         
         // Initialize input fields
         if (rowsInputField != null)
@@ -350,9 +352,9 @@ public class GameManager : MonoBehaviour
     }
     
     // Handle rows input field change
-    private void OnRowsChanged(string value)
+    private void OnRowsChanged(string _value)
     {
-        if (int.TryParse(value, out int rows))
+        if (int.TryParse(_value, out int rows))
         {
             gameRows = Mathf.Clamp(rows, 2, 6); // Limit between 2 and 6
             rowsInputField.text = gameRows.ToString();
@@ -364,9 +366,9 @@ public class GameManager : MonoBehaviour
     }
     
     // Handle columns input field change
-    private void OnColsChanged(string value)
+    private void OnColsChanged(string _value)
     {
-        if (int.TryParse(value, out int cols))
+        if (int.TryParse(_value, out int cols))
         {
             gameCols = Mathf.Clamp(cols, 2, 6); // Limit between 2 and 6
             colsInputField.text = gameCols.ToString();
@@ -376,16 +378,6 @@ public class GameManager : MonoBehaviour
             colsInputField.text = gameCols.ToString();
         }
     }
-    
-    // Purpose is to allow preloading of panel, so that it does not lag when it loads
-    // Call this in the start method to preload all sprites at start of the script
-    private void PreloadCardImage()
-    {
-        for (int i = 0; i < sprites.Length; i++)
-            spritePreload.SpriteID = i;
-        spritePreload.gameObject.SetActive(false);
-    }
-    
     // Start a game
     public void StartCardGame()
     {
@@ -406,7 +398,7 @@ public class GameManager : MonoBehaviour
         gameStart = true;
         // toggle UI
         menu.SetActive(false);
-        panel.SetActive(true);
+        gamePanel.SetActive(true);
         info.SetActive(false);
         // set cards, size, position
         SetGamePanel();
@@ -436,7 +428,7 @@ private void SetGamePanel()
     }
     
     // calculate position between each card & start position of each card based on the Panel
-    RectTransform panelsize = panel.transform.GetComponent(typeof(RectTransform)) as RectTransform;
+    RectTransform panelsize = cardPanel.transform.GetComponent(typeof(RectTransform)) as RectTransform;
     float panelWidth = panelsize.sizeDelta.x;
     float panelHeight = panelsize.sizeDelta.y;
     
@@ -476,9 +468,6 @@ private void SetGamePanel()
             // If this is the last position and we have an odd total, place the middle card here
             if (isOdd == 1 && row == gameRows - 1 && col == gameCols - 1)
             {
-                // Calculate middle position
-                int middleRow = middleIndex / gameCols;
-                int middleCol = middleIndex % gameCols;
                 
                 // create card prefab
                 GameObject c = Instantiate(prefab);
@@ -525,13 +514,6 @@ private void SetGamePanel()
         }
     }
 }
-    
-    // reset face-down rotation of all cards
-    void ResetFace()
-    {
-        for (int i = 0; i < cards.Length; i++)
-            cards[i].ResetRotation();
-    }
     
     // Flip all cards after a short period
     IEnumerator HideFace()
@@ -588,9 +570,9 @@ private void SetGamePanel()
     }
     
     // return Sprite based on its id
-    public Sprite GetSprite(int spriteId)
+    public Sprite GetSprite(int _spriteId)
     {
-        return sprites[spriteId];
+        return sprites[_spriteId];
     }
     
     // return card back Sprite
@@ -600,7 +582,7 @@ private void SetGamePanel()
     }
     
     // check if clickable
-    public bool canClick()
+    public bool CanClick()
     {
         if (!gameStart)
             return false;
@@ -608,21 +590,21 @@ private void SetGamePanel()
     }
     
     // card onclick event
-    public void cardClicked(int spriteId, int cardId)
+    public void CardClicked(int _spriteId, int _cardId)
     {
         // first card selected
         if (spriteSelected == -1)
         {
-            spriteSelected = spriteId;
-            cardSelected = cardId;
+            spriteSelected = _spriteId;
+            cardSelected = _cardId;
         }
         else
         { // second card selected
-            if (spriteSelected == spriteId)
+            if (spriteSelected == _spriteId)
             {
                 //correctly matched
                 cards[cardSelected].Inactive();
-                cards[cardId].Inactive();
+                cards[_cardId].Inactive();
                 cardLeft -= 2;
                 if (cardLeft == 0){
                     EndGame();
@@ -636,7 +618,7 @@ private void SetGamePanel()
             {
                 // incorrectly matched
                 cards[cardSelected].Flip();
-                cards[cardId].Flip();
+                cards[_cardId].Flip();
                 AudioPlayer.Instance.PlayAudio(3, 0.8f);
             }
             cardSelected = spriteSelected = -1;
@@ -650,18 +632,13 @@ private void SetGamePanel()
     private void EndGame()
     {
         gameStart = false;
-        panel.SetActive(false);
+        gamePanel.SetActive(false);
         menu.SetActive(true);
     }
     
     public void GiveUp()
     {
         EndGame();
-    }
-    
-    public void DisplayInfo(bool i)
-    {
-        info.SetActive(i);
     }
 
     public void UpdateTurnText()
